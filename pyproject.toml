@@ -1,0 +1,27 @@
+[project]
+name = "template-notebooks"
+version = "0.1.0"
+description = "Template"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ipykernel>=7.3.0",
+    "quarto-cli>=1.9.38",
+]
+
+[dependency-groups]
+dev = [
+    "pyrefly>=1.1.1",
+    "ruff>=0.15.19",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "RUF"]
+
+[tool.pyrefly]
+project-includes = ["**/*.py"]
+project-excludes = [".venv/**"]
