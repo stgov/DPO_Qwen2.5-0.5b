@@ -1,0 +1,53 @@
+name: Render and Publish Quarto Site
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Evita que dos publicaciones corran en paralelo y se pisen
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: pre-release   # o fija una version concreta, ej: "1.5.57"
+
+      - name: Render notebook (using saved outputs, no execution)
+        run: quarto render main.ipynb --to html
+
+      - name: Prepare site folder
+        run: |
+          mkdir -p _site
+          cp main.html _site/index.html
+          # si el notebook genera carpeta de recursos (ej. main_files/), la copiamos tambien
+          if [ -d "main_files" ]; then cp -r main_files _site/; fi
+
+      - name: Upload artifact for Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "_site"
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

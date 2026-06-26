@@ -8,3 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
+.env
+data/*
+checkpoints/*
+main_files/*
+main.html

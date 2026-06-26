@@ -3,10 +3,18 @@ name = "template-notebooks"
 version = "0.1.0"
 description = "Template"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12, <3.13"
+virtual = true
+
 dependencies = [
     "ipykernel>=7.3.0",
     "quarto-cli>=1.9.38",
+    "torch",
+    "trl[peft]>=1.6.0",
+    "peft>=0.19.1",
+    "transformers>=5.12.0",
+    "datasets>=5.0.0",
+    "matplotlib>=3.11.0",
 ]
 
 [dependency-groups]
@@ -25,3 +33,13 @@ select = ["E", "F", "W", "I", "UP", "RUF"]
 [tool.pyrefly]
 project-includes = ["**/*.py"]
 project-excludes = [".venv/**"]
+
+[tool.uv]
+environments = ["sys_platform == 'win32'"]
+# Tell uv to scan this directory for missing AMD/ROCm wheels
+find-links = ["https://repo.radeon.com/rocm/windows/rocm-rel-7.2.1/"]
+
+[tool.uv.sources]
+torch = { url = "https://repo.radeon.com/rocm/windows/rocm-rel-7.2.1/torch-2.9.1%2Brocm7.2.1-cp312-cp312-win_amd64.whl" }
+torchvision = { url = "https://repo.radeon.com/rocm/windows/rocm-rel-7.2.1/torchvision-0.24.1%2Brocm7.2.1-cp312-cp312-win_amd64.whl" }
+torchaudio = { url = "https://repo.radeon.com/rocm/windows/rocm-rel-7.2.1/torchaudio-2.9.1%2Brocm7.2.1-cp312-cp312-win_amd64.whl" }
